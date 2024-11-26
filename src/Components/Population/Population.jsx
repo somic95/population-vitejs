@@ -276,7 +276,10 @@ const Population = () => {
         {/* Results */}
         {Object.keys(data).length > 0 && (
           <div className="mt-10 flex flex-col justify-center items-center bg-slate-100 rounded-md py-4">
-            <h2>Population Comparison Results</h2>
+            <h2>
+              Population Comparison Results :{" "}
+              <span className="uppercase text-red-700">{country}</span>
+            </h2>
             {Object.entries(data).map(([year, info]) => (
               <p key={year}>
                 <strong>Year {year} :</strong>{" "}
