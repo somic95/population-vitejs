@@ -283,7 +283,9 @@ const Population = () => {
             {Object.entries(data).map(([year, info]) => (
               <p key={year}>
                 <strong>Year {year} :</strong>{" "}
-                {info.population ? info.population.toLocaleString() : "No data"}
+                {info.population ? info.population.toLocaleString() : "No data"}{" "}
+                ({"Median age : "}
+                {info.median_age})
               </p>
             ))}
             {year1 && year2 && (
@@ -297,7 +299,7 @@ const Population = () => {
             {year3 && year4 && (
               <p>
                 <strong>
-                  Difference between {year3} and {year4}:
+                  Difference between {year3} and {year4} :
                 </strong>{" "}
                 {calculateDifference(year3, year4)}
               </p>
