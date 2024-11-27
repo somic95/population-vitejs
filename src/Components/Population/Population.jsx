@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { API_KEY } from "../../data";
 import btn_img from "../../assets/undo.png";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const Population = () => {
   const [country, setCountry] = useState("");
@@ -8,7 +19,6 @@ const Population = () => {
   const [year2, setYear2] = useState("");
   const [year3, setYear3] = useState("");
   const [year4, setYear4] = useState("");
-
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,6 +28,33 @@ const Population = () => {
     1975, 1970, 1965, 1960, 1955,
   ];
   const forecastYears = [2050, 2045, 2040, 2035, 2030, 2025];
+
+  // Predefined color palette for each year
+  const colorPalette = {
+    2050: "rgba(255, 99, 132, 0.7)", // Soft Red
+    2045: "rgba(54, 162, 235, 0.7)", // Light Blue
+    2040: "rgba(255, 206, 86, 0.7)", // Light Yellow
+    2035: "rgba(75, 192, 192, 0.7)", // Teal
+    2030: "rgba(153, 102, 255, 0.7)", // Lavender
+    2025: "rgba(255, 159, 64, 0.7)", // Orange
+    2024: "rgba(255, 99, 71, 0.7)", // Tomato
+    2023: "rgba(255, 165, 0, 0.7)", // Orange
+    2022: "rgba(100, 149, 237, 0.7)", // Cornflower Blue
+    2020: "rgba(0, 255, 255, 0.7)", // Cyan
+    2015: "rgba(255, 69, 0, 0.7)", // Red-Orange
+    2010: "rgba(34, 193, 195, 0.7)", // Gradient Teal
+    2005: "rgba(253, 108, 158, 0.7)", // Soft Pink
+    2000: "rgba(123, 104, 238, 0.7)", // Medium Slate Blue
+    1995: "rgba(144, 238, 144, 0.7)", // Light Green
+    1990: "rgba(255, 228, 196, 0.7)", // Bisque
+    1985: "rgba(255, 222, 173, 0.7)", // Navajo White
+    1980: "rgba(238, 130, 238, 0.7)", // Violet
+    1975: "rgba(135, 206, 250, 0.7)", // Light Sky Blue
+    1970: "rgba(255, 105, 180, 0.7)", // Hot Pink
+    1965: "rgba(255, 215, 0, 0.7)", // Golden Yellow
+    1960: "rgba(70, 130, 180, 0.7)", // Steel Blue
+    1955: "rgba(255, 99, 71, 0.7)", // Tomato Red
+  };
 
   const fetchData = async (years) => {
     setLoading(true);
@@ -113,8 +150,51 @@ const Population = () => {
     return "N/A";
   };
 
+  // Prepare data for Chart.js
+  const generateColors = (count) => {
+    return Array.from({ length: count }, () => {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgba(${r}, ${g}, ${b}, 0.7)`;
+    });
+  };
+
+  // Prepare data for Chart.js
+  const years = Object.keys(data).reverse();
+  const populations = Object.values(data).map((entry) => entry.population || 0);
+  // Map the years to specific colors using the predefined color palette
+  const colors = years.map(
+    (year) => colorPalette[year] || "rgba(0, 0, 0, 0.7)"
+  ); // Default to black if no color is defined
+
+  const chartData = {
+    labels: years,
+    datasets: [
+      {
+        label: "Population",
+        data: populations,
+        backgroundColor: colors,
+        borderColor: colors.map((color) => color.replace("0.7", "1")),
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      y: { beginAtZero: true, title: { display: true, text: "Population" } },
+      x: { title: { display: true, text: "Year" } },
+    },
+  };
+
   return (
-    <div className="container bg-gradient-to-br from-[#95c7fa] to-[#e2e8f0] font-spacegrotesk bg-white md:w-[600px] rounded-lg shadow-[15px_15px_25px_#595959] flex justify-center items-center px-4 py-6">
+    <div className="bg-gradient-to-br from-[#95c7fa] to-[#e2e8f0] font-spacegrotesk bg-white md:w-[600px] rounded-lg shadow-[15px_15px_25px_#595959] flex justify-center items-center p-4 my-4">
       <article className="bg-white w-full p-6 rounded-lg">
         <h1 className="text-center text-white uppercase tracking-widest py-4 bg-gradient-to-t from-[#0be692] to-[#07bade] rounded-xl">
           Population Comparison
@@ -317,7 +397,19 @@ const Population = () => {
           </div>
         )}
 
-        {/* Reset Button */}
+        {/* graph results */}
+        {Object.keys(data).length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-center mb-4">
+              Population Multi-Color Bar Graph
+            </h2>
+            <div className="h-80">
+              <Bar data={chartData} options={chartOptions} />
+            </div>
+          </div>
+        )}
+
+        {/* Reset All Button */}
         <div className="flex justify-center items-center">
           <button
             type="button"
