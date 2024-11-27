@@ -151,16 +151,6 @@ const Population = () => {
   };
 
   // Prepare data for Chart.js
-  const generateColors = (count) => {
-    return Array.from({ length: count }, () => {
-      const r = Math.floor(Math.random() * 256);
-      const g = Math.floor(Math.random() * 256);
-      const b = Math.floor(Math.random() * 256);
-      return `rgba(${r}, ${g}, ${b}, 0.7)`;
-    });
-  };
-
-  // Prepare data for Chart.js
   const years = Object.keys(data).reverse();
   const populations = Object.values(data).map((entry) => entry.population || 0);
   // Map the years to specific colors using the predefined color palette
@@ -384,16 +374,6 @@ const Population = () => {
                 {calculateDifference(year3, year4)}
               </p>
             )}
-
-            <div className="flex justify-center items-center">
-              <button
-                type="button"
-                className="mt-6 text-center px-4 py-2 bg-gradient-to-t from-slate-300 to-slate-100 rounded-full hover:text-red-700 hover:font-semibold"
-                onClick={resetData}
-              >
-                Reset All Results
-              </button>
-            </div>
           </div>
         )}
 
@@ -409,13 +389,20 @@ const Population = () => {
           </div>
         )}
 
-        {/* Reset All Button */}
+        {/* Reset All Results */}
         <div className="flex justify-center items-center">
           <button
             type="button"
             className="mt-6 text-center px-4 py-2 bg-gradient-to-t from-slate-300 to-slate-100 rounded-full hover:text-red-700 hover:font-semibold"
-            onClick={resetAllForm}
+            onClick={resetData}
           >
+            Reset All Results
+          </button>
+        </div>
+
+        {/* Reset All Button */}
+        <div className="text-right text-slate-400 text-sm">
+          <button type="button" onClick={resetAllForm}>
             Reset All
           </button>
         </div>
