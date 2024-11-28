@@ -341,7 +341,7 @@ const Population = () => {
         </div>
 
         {/* Error Message */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="text-red-600 text-xs italic p-4">{error}</p>}
 
         {/* Results */}
         {Object.keys(data).length > 0 && (
@@ -350,14 +350,18 @@ const Population = () => {
               Population Comparison Results :{" "}
               <span className="uppercase text-red-700">{country}</span>
             </h2>
-            {Object.entries(data).map(([year, info]) => (
-              <p key={year}>
-                <strong>Year {year} :</strong>{" "}
-                {info.population ? info.population.toLocaleString() : "No data"}{" "}
-                ({"Median age : "}
-                {info.median_age})
-              </p>
-            ))}
+            {Object.entries(data)
+              .reverse()
+              .map(([year, info]) => (
+                <p key={year}>
+                  <strong>Year {year} :</strong>{" "}
+                  {info.population
+                    ? info.population.toLocaleString()
+                    : "No data"}{" "}
+                  ({"Median age : "}
+                  {info.median_age})
+                </p>
+              ))}
             {year1 && year2 && (
               <p>
                 <strong>
